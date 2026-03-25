@@ -1,5 +1,5 @@
 import http from "node:http";
-import { unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
@@ -26,6 +26,18 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/questions", questionsRouter);
 app.use("/api/exams", examsRouter);
 app.use("/api/grading", gradingRouter);
+
+const clientDistDir = join(projectRoot, "client", "dist");
+if (existsSync(clientDistDir)) {
+  app.use(express.static(clientDistDir));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) {
+      next();
+      return;
+    }
+    res.sendFile(join(clientDistDir, "index.html"));
+  });
+}
 
 const shouldPublishDevPort =
   process.env.NODE_ENV !== "production" && process.env.WRITE_API_PORT_FILE !== "0";

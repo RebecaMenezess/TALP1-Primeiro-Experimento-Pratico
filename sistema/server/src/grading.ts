@@ -100,9 +100,12 @@ function normalizeLettersAnswer(raw: string): Set<string> {
 
 function decodePowerSum(sum: number, altCount: number): Set<string> {
   const set = new Set<string>();
+  let remaining = sum;
   for (let i = 0; i < altCount; i += 1) {
     const p = powerLabel(i);
-    if ((sum & p) === p) set.add(String(p));
+    if (remaining >= p && Math.floor(remaining / p) % 2 === 1) {
+      set.add(String(p));
+    }
   }
   return set;
 }
@@ -185,6 +188,11 @@ export function gradeFromCsv(args: {
 
   if (responseQuestionCols.length === 0) {
     throw new Error("Responses CSV must include question columns named q1, q2, ... (wide format).");
+  }
+  if (responseQuestionCols.length < answerQuestionCols.length) {
+    throw new Error(
+      `Responses CSV has ${responseQuestionCols.length} question columns but answer key requires ${answerQuestionCols.length}.`
+    );
   }
 
   const rows: GradeExamsResult["rows"] = [];
