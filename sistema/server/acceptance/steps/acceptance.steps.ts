@@ -96,23 +96,23 @@ Then("the response field {string} should be {string}", (field: string, expected:
   assert.equal(String(lastResponse.body?.[field]), expected);
 });
 
-Then("student {string} should have total score {float}", (studentName: string, expectedScore: number) => {
-  assert.ok(lastResponse, "Expected an API response");
-  const rows = lastResponse.body?.rows as Array<{ studentName?: string; totalScore?: number }> | undefined;
-  assert.ok(Array.isArray(rows), "Expected a grading response with rows");
-  const row = rows.find((r) => r.studentName === studentName);
-  assert.ok(row, `Student "${studentName}" not found in grading rows`);
-  assert.ok(typeof row.totalScore === "number", "Expected totalScore to be a number");
-  assert.ok(Math.abs(row.totalScore - expectedScore) < 0.0001, `Expected ${expectedScore}, got ${row.totalScore}`);
-});
+// One step only: Cucumber matches both {int} and {float} for whole numbers like "2", which causes ambiguity.
+Then(
+  /^student "([^"]*)" should have total score (.+)$/,
+  (studentName: string, expectedRaw: string) => {
+    const expectedScore = Number(expectedRaw);
+    assert.ok(Number.isFinite(expectedScore), `Invalid expected score: ${expectedRaw}`);
 
-Then("student {string} should have total score {int}", (studentName: string, expectedScore: number) => {
-  assert.ok(lastResponse, "Expected an API response");
-  const rows = lastResponse.body?.rows as Array<{ studentName?: string; totalScore?: number }> | undefined;
-  assert.ok(Array.isArray(rows), "Expected a grading response with rows");
-  const row = rows.find((r) => r.studentName === studentName);
-  assert.ok(row, `Student "${studentName}" not found in grading rows`);
-  assert.ok(typeof row.totalScore === "number", "Expected totalScore to be a number");
-  assert.ok(Math.abs(row.totalScore - expectedScore) < 0.0001, `Expected ${expectedScore}, got ${row.totalScore}`);
-});
+    assert.ok(lastResponse, "Expected an API response");
+    const rows = lastResponse.body?.rows as Array<{ studentName?: string; totalScore?: number }> | undefined;
+    assert.ok(Array.isArray(rows), "Expected a grading response with rows");
+    const row = rows.find((r) => r.studentName === studentName);
+    assert.ok(row, `Student "${studentName}" not found in grading rows`);
+    assert.ok(typeof row.totalScore === "number", "Expected totalScore to be a number");
+    assert.ok(
+      Math.abs(row.totalScore - expectedScore) < 0.0001,
+      `Expected ${expectedScore}, got ${row.totalScore}`
+    );
+  }
+);
 
