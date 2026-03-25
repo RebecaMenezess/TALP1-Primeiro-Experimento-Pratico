@@ -21,6 +21,10 @@ function normalizeAlternatives(
 
 const questions = new Map<string, Question>();
 
+export function clearQuestions(): void {
+  questions.clear();
+}
+
 export function listQuestions(): Question[] {
   return [...questions.values()].sort((a, b) =>
     a.description.localeCompare(b.description, undefined, { sensitivity: "base" })

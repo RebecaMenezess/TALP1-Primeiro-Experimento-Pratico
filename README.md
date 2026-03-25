@@ -1,8 +1,18 @@
 # Exam Generator and Grading System
 
+> Agent used in this project: **Cursor**.
+>
+> This README was created by the **Cursor agent**.
+>
+> Observation: this repository is a project related to the **TALP 1** discipline and is an exercise designed to show students the reality of coding with agents.
+
+> Observation (about this repository): the text below explains what the TALP 1 exercise application does.
+
 Web application for managing closed exam questions, building exams, generating randomized individual PDFs, exporting answer keys, grading student responses from CSV files, and generating a class grade report.
 
 ## What this project does
+
+> Observation: the list below describes the repository purpose and scope for the TALP 1 exercise.
 
 - Manage closed questions (create, update, delete)
   - Question statement
@@ -50,6 +60,21 @@ npm run dev
 
 - Frontend: `http://localhost:5173`
 - API: auto-selected port starting at `4000`
+
+## Acceptance tests (Gherkin + Cucumber)
+
+Acceptance scenarios were implemented with **Gherkin** and **Cucumber** in:
+
+- `sistema/server/acceptance/features`
+- `sistema/server/acceptance/steps`
+
+Run them with:
+
+```bash
+cd sistema
+npm install
+npm run test:acceptance
+```
 
 ## Grading CSV format
 

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test:acceptance": "NODE_OPTIONS='--import tsx' cucumber-js \"acceptance/features/**/*.feature\" --import \"acceptance/steps/**/*.ts\""
   },
   "dependencies": {
     "@closed-questions/shared": "*",
@@ -16,11 +17,14 @@
     "pdfkit": "^0.17.2"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^11.2.0",
     "@types/archiver": "^6.0.3",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.5",
     "@types/pdfkit": "^0.13.9",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }

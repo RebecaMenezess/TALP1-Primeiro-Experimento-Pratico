@@ -4,6 +4,10 @@ import { getQuestion } from "./store.js";
 
 const exams = new Map<string, Exam>();
 
+export function clearExams(): void {
+  exams.clear();
+}
+
 export function listExams(): Exam[] {
   return [...exams.values()].sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
 }

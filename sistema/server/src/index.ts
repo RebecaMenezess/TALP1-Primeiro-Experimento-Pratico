@@ -1,43 +1,16 @@
 import http from "node:http";
-import { existsSync, unlinkSync, writeFileSync } from "node:fs";
+import { unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import cors from "cors";
-import express from "express";
-import { questionsRouter } from "./routes/questions.js";
-import { examsRouter } from "./routes/exams.js";
-import { gradingRouter } from "./routes/grading.js";
+import { createApp } from "./app.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, "..", "..");
 const DEV_PORT_FILE = join(projectRoot, ".api-port");
 const MAX_PORT_TRIES = 50;
 
-const app = express();
+const app = createApp({ enableStatic: true, projectRoot });
 const basePort = Number(process.env.PORT) || 4000;
-
-app.use(cors({ origin: true }));
-app.use(express.json());
-
-app.get("/api/health", (_req, res) => {
-  res.json({ ok: true });
-});
-
-app.use("/api/questions", questionsRouter);
-app.use("/api/exams", examsRouter);
-app.use("/api/grading", gradingRouter);
-
-const clientDistDir = join(projectRoot, "client", "dist");
-if (existsSync(clientDistDir)) {
-  app.use(express.static(clientDistDir));
-  app.get("*", (req, res, next) => {
-    if (req.path.startsWith("/api")) {
-      next();
-      return;
-    }
-    res.sendFile(join(clientDistDir, "index.html"));
-  });
-}
 
 const shouldPublishDevPort =
   process.env.NODE_ENV !== "production" && process.env.WRITE_API_PORT_FILE !== "0";
